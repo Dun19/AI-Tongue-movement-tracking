@@ -61,7 +61,11 @@ jobs:
 
   deploy:
     if: github.ref_name == 'production'
+<<<<<<< HEAD
       runs-on: ubuntu-
+=======
+      runs-on: ubuntu-latest
+>>>>>>> main
       needs: test-and-build
       steps:
         - name: restore built js files
