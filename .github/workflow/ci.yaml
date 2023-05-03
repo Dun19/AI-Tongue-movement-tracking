@@ -1,0 +1,39 @@
+name: tongueDetection-ci
+
+on:
+  push:
+    branches:
+      - "*"
+  workflow_dispatch:
+
+env:
+  NODE_ENV: ci
+  POSTGRES_DB: tongue-ci
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: 5432
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: node:18.16.0-slim
+    services:
+      postgres:
+        image: postgres:14.7-alpine3.17
+        env:
+          POSTGRES_DB: ${{env.POSTGRES_DB}}
+          POSTGRES_USER: ${{env.POSTGRES_USER}}
+          POSTGRES_PASSWORD: ${{env.POSTGRES_PASSWORD}}
+          POSTGRES_HOST: ${{env.POSTGRES_HOST}}
+          POSTGRES_PORT: ${{env.POSTGRES_PORT}}
+    steps:
+      - users: actions/checkout@v3
+      - name: npm install
+        run: |
+          cd web-server
+          npm install
+      - name: jest test
+        run: |
+          npm run ci
+  build:
