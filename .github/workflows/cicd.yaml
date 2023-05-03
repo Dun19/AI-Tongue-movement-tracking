@@ -64,8 +64,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: test-and-build
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v3
       - name: restore built js files
+      - uses: actions/download-artifact@v3
         with: 
           name: tsc-output
           path: ${{env.GIT_PROJECT_SERVER_DIR}}
