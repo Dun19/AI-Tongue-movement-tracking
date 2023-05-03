@@ -19,6 +19,7 @@ env:
   SERVER_USER: tongueTest
   SERVER_PROJECT_CLIENT_DIR: ~/tongueTest-Server/web-client
   SERVER_PROJECT_SERVER_DIR: ~/tongueTest-Server/web-server
+  PM2_NAME: tongueTest-Server
 
 jobs:
   test-and-build:
@@ -59,7 +60,7 @@ jobs:
 
 
   deploy:
-    # if: github.ref_name == 'production'
+    if: github.ref_name == 'production'
       runs-on: ubuntu-server
       needs: test-and-build
       steps:
@@ -101,8 +102,15 @@ jobs:
           run: |
             ssh server"
             source ~/.nvm/nvm.sh && \
+            cd ${{SERVER_PROJECT_CLIENT_DIR}}
+            npm i --omit=dev && \
             cd ${{SERVER_PROJECT_SERVER_DIR}} && \
             npm i --omit=dev && \
-            
+            cp .env dist/ &&\
+            cd dist &&\
+            npx knex migrate:latest &&\
+            # npx knex seed:run &&\
+            pm2 reload ${{PM2_NAME}} &&\
+            echo done.
             "
             
