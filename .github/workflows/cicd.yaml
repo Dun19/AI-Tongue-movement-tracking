@@ -1,0 +1,82 @@
+name: tongueDetection-ci
+
+on:
+  push:
+    branches:
+      - "*"
+  workflow_dispatch:
+
+env:
+  NODE_ENV: ci
+  POSTGRES_DB: tongue-ci
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: 5432
+  SERVER_HOST: 18.142.205.192
+  SERVER_DIR: web-server
+  SERVER_USER: tongueTest
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    container: node:18.16.0-slim
+    services:
+      postgres:
+        image: postgres:14.7-alpine3.17
+        env:
+          POSTGRES_DB: ${{env.POSTGRES_DB}}
+          POSTGRES_USER: ${{env.POSTGRES_USER}}
+          POSTGRES_PASSWORD: ${{env.POSTGRES_PASSWORD}}
+          POSTGRES_HOST: ${{env.POSTGRES_HOST}}
+          POSTGRES_PORT: ${{env.POSTGRES_PORT}}
+    steps:
+      - users: actions/checkout@v3
+      - name: npm install
+        run: |
+          cd ${{env.SERVER_DIR}}
+          npm install
+      - name: jest test
+        run: |
+          cd ${{env.SERVER_DIR}}
+          npm run ci
+      - name: tsc build
+        run: |
+          cd ${{env.SERVER_DIR}}
+          npm run build
+      - name: archive built js files
+        uses: actions/upload-artifact@v3
+        with: 
+          name: tsc-output
+          path: ${{env.SERVER_DIR}}/dist
+
+
+  deploy:
+    if: github.ref_name == 'production'
+      runs-on: ubuntu-server
+      needs: test-and-build
+      steps:
+        - name: restore built js files
+          uses: actions/download-artifact@v3
+          with: 
+            name: tsc-output
+            path: ${{env.SERVER_DIR}}
+        - name: check restored files
+          run: |
+            cd ${{env.SERVER_DIR}}
+            ls -l dist
+        - name: setup ssh credential
+          run: |
+            mkdir -p ~/.ssh
+            cd ~/.ssh
+            echo "Host server" >> config
+            echo "  Hostname ${{env.SERVER_HOST}}" >> config
+            echo "  User ${{env.SERVER_USER}}" >> config
+            echo "  IdentifyFile ~/.ssh/github.pem" >> config
+            echo "${{secrets.SSH_PRIVATE_KEY}}" > github.pem
+            chmod 400 github.pem
+            ssh-keyscan ${{env.SERVER_HOST}} >> known_hosts
+        - name: test ssh setup
+         run: |
+          ssh server ls -lah
+

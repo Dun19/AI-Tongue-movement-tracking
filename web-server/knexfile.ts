@@ -17,7 +17,7 @@ const config: { [key: string]: Knex.Config } = {
   test: {
     client: "pg",
     connection: {
-      database: env.DB_NAME,
+      database: env.TEST_DB_NAME,
       user: env.TEST_DB_USERNAME,
       password: env.TEST_DB_PASSWORD,
       host: env.DB_HOST,

@@ -18,11 +18,7 @@ export class TongueController extends HttpController {
       maxFileSize: 1024 ** 2 * 200, // the default limit is 200KB
       filter: (part) => part.mimetype?.startsWith("image/") || false,
     });
-    form.parse(req, (err, fields, files) => {
-      if (err) {
-        return;
-      }
-    });
-    return this.tongueService.postTongueImage();
+
+    return this.tongueService.postTongueImage(form, req);
   };
 }

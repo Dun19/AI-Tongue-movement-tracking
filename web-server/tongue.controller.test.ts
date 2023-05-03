@@ -5,24 +5,25 @@ import { TongueService } from "./tongue.service";
 import { newKnex } from "./knex";
 import { Request } from "express";
 
-let tongueServiceMock: TongueService;
-let tongueControllerMock: TongueController;
+let ITongueServiceMock: ITongueService;
 
+let tongueControllerMock: TongueController;
+let postTongueImageMock: jest.Mock;
 let req: Request;
 
 beforeEach(() => {
-  let knex = newKnex();
-  tongueServiceMock = new TongueService(knex);
-  tongueServiceMock.postTongueImage = jest.fn();
-  tongueControllerMock = new TongueController(tongueServiceMock);
+  postTongueImageMock = jest.fn();
+  ITongueServiceMock = { postTongueImage: postTongueImageMock };
+  tongueControllerMock = new TongueController(ITongueServiceMock);
   req = mockRequest();
 });
 
 describe("PostTongueImage", () => {
   it("", async () => {
-    // tongueServiceMock.postTongueImage.mockResolvedValue({ x: "mock" });
+    postTongueImageMock.mockResolvedValue({ x: "mock" });
+
     let json = await tongueControllerMock.postTongueImage(req);
     expect(json).toEqual({ x: "mock" });
-    expect(tongueServiceMock.postTongueImage).toBeCalled();
+    expect(postTongueImageMock).toBeCalled();
   });
 });
