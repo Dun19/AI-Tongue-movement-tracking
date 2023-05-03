@@ -1,10 +1,10 @@
 import express, { Request, Response, NextFunction } from "express";
 import { env } from "./env";
 // import { userRoute } from "./routes/user.route";
-import { tongueRecognitionRoute } from "./routes/tongue.route";
+import { tongueRoute } from "./routes/tongue.route";
 import { HttpError } from "./error";
 import { print } from "listening-on";
-import { knex } from "./knex";
+import { newKnex } from "./knex";
 import fs from "fs";
 
 const uploadDir = "uploads";
@@ -13,7 +13,7 @@ fs.mkdirSync(uploadDir, { recursive: true });
 let app = express();
 
 app.use((req, res, next) => {
-  // console.log(req.method, req.url, req.headers["user-agent"]);
+  let knex = newKnex();
   knex
     .insert({
       method: req.method,
@@ -27,13 +27,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static("public"));
+app.use(express.static("../web-client/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // app.use(userRoute);
 
-app.use(tongueRecognitionRoute);
+app.use(tongueRoute);
 
 app.use((req, res, next) => {
   next(new HttpError(404, "route not found"));

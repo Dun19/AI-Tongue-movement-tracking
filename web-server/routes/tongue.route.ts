@@ -1,12 +1,14 @@
 import { Router } from "express";
-import { knex } from "../knex";
+
 import { HttpError } from "../error";
+import formidable from "formidable";
+import { TongueService } from "../tongue.service";
+import { newKnex } from "../knex";
+import { TongueController } from "../tongue.controller";
 
-export let tongueRecognitionRoute = Router();
+export let tongueRoute = Router();
+let knex = newKnex();
+let tongueService = new TongueService(knex);
+let tongueController = new TongueController(tongueService);
 
-tongueRecognitionRoute.get("/tongueAI", async (req, res, next) => {
-  try {
-  } catch (error) {
-    next(new HttpError(500, String(error)));
-  }
-});
+tongueRoute.use(tongueController.router);
