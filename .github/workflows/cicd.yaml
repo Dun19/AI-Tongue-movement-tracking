@@ -60,57 +60,57 @@ jobs:
 
 
   deploy:
-      if: github.ref_name == 'production'
-      runs-on: ubuntu-latest
-      needs: test-and-build
-      steps:
-        - name: restore built js files
-          uses: actions/download-artifact@v3
-          with: 
-            name: tsc-output
-            path: ${{env.GIT_PROJECT_SERVER_DIR}}
-        - name: check restored files
-          run: |
-            cd ${{env.GIT_PROJECT_SERVER_DIR}}
-            ls -l dist
-        - name: setup ssh credential
-          run: |
-            mkdir -p ~/.ssh
-            cd ~/.ssh
-            echo "Host server" >> config
-            echo "  Hostname ${{env.SERVER_HOST}}" >> config
-            echo "  User ${{env.SERVER_USER}}" >> config
-            echo "  IdentifyFile ~/.ssh/github.pem" >> config
-            echo "${{secrets.SSH_PRIVATE_KEY}}" > github.pem
-            chmod 400 github.pem
-            ssh-keyscan ${{env.SERVER_HOST}} >> known_hosts
-        - name: test ssh setup
-         run: |
-          ssh server ls -lah
-        - name: upload built js files
-          run: |
-            rsync -SavLP \
-              web-client\package.json \
-              web-client\public \
-              server:${{env.SERVER_PROJECT_CLIENT_DIR}}
-          run: |
-            rsync -SavLP \
-              web-server\dist \
-              web-server\package.json \
-              server:${{env.SERVER_PROJECT_SERVER_DIR}}
-        -name: update server
-          run: |
-            ssh server"
-            source ~/.nvm/nvm.sh && \
-            cd ${{SERVER_PROJECT_CLIENT_DIR}}
-            npm i --omit=dev && \
-            cd ${{SERVER_PROJECT_SERVER_DIR}} && \
-            npm i --omit=dev && \
-            cp .env dist/ &&\
-            cd dist &&\
-            npx knex migrate:latest &&\
-            # npx knex seed:run &&\
-            pm2 reload ${{PM2_NAME}} &&\
-            echo done.
-            "
-            
+    if: github.ref_name == 'production'
+    runs-on: ubuntu-latest
+    needs: test-and-build
+    steps:
+      - uses: actions/download-artifact@v3
+      - name: restore built js files
+        with: 
+          name: tsc-output
+          path: ${{env.GIT_PROJECT_SERVER_DIR}}
+      - name: check restored files
+        run: |
+          cd ${{env.GIT_PROJECT_SERVER_DIR}}
+          ls -l dist
+      - name: setup ssh credential
+        run: |
+          mkdir -p ~/.ssh
+          cd ~/.ssh
+          echo "Host server" >> config
+          echo "  Hostname ${{env.SERVER_HOST}}" >> config
+          echo "  User ${{env.SERVER_USER}}" >> config
+          echo "  IdentifyFile ~/.ssh/github.pem" >> config
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > github.pem
+          chmod 400 github.pem
+          ssh-keyscan ${{env.SERVER_HOST}} >> known_hosts
+      - name: test ssh setup
+       run: |
+        ssh server ls -lah
+      - name: upload built js files
+        run: |
+          rsync -SavLP \
+            web-client\package.json \
+            web-client\public \
+            server:${{env.SERVER_PROJECT_CLIENT_DIR}}
+        run: |
+          rsync -SavLP \
+            web-server\dist \
+            web-server\package.json \
+            server:${{env.SERVER_PROJECT_SERVER_DIR}}
+      -name: update server
+        run: |
+          ssh server"
+          source ~/.nvm/nvm.sh && \
+          cd ${{SERVER_PROJECT_CLIENT_DIR}}
+          npm i --omit=dev && \
+          cd ${{SERVER_PROJECT_SERVER_DIR}} && \
+          npm i --omit=dev && \
+          cp .env dist/ &&\
+          cd dist &&\
+          npx knex migrate:latest &&\
+          # npx knex seed:run &&\
+          pm2 reload ${{PM2_NAME}} &&\
+          echo done.
+          "
+          
