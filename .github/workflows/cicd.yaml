@@ -66,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: restore built js files
-      - uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3
         with: 
           name: tsc-output
           path: ${{env.GIT_PROJECT_SERVER_DIR}}
@@ -90,14 +90,16 @@ jobs:
         ssh server ls -lah
       - name: upload built js files
         run: |
+          cd ${{GIT_PROJECT_CLIENT_DIR}}
           rsync -SavLP \
-            web-client\package.json \
-            web-client\public \
+            package.json \
+            public \
             server:${{env.SERVER_PROJECT_CLIENT_DIR}}
         run: |
+          cd ${{GIT_PROJECT_SERVER_DIR}}
           rsync -SavLP \
-            web-server\dist \
-            web-server\package.json \
+            dist \
+            package.json \
             server:${{env.SERVER_PROJECT_SERVER_DIR}}
       -name: update server
         run: |
