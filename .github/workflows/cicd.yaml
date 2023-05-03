@@ -70,10 +70,10 @@ jobs:
         with: 
           name: tsc-output
           path: ${{env.GIT_PROJECT_SERVER_DIR}}
-      - name: check restored files
-        run: |
-          cd ${{env.GIT_PROJECT_SERVER_DIR}}
-          ls -l dist
+      # - name: check restored files
+      #   run: |
+      #     cd ${{env.GIT_PROJECT_SERVER_DIR}}
+      #     ls -l dist
       - name: setup ssh credential
         run: |
           mkdir -p ~/.ssh
@@ -85,9 +85,9 @@ jobs:
           echo "${{secrets.SSH_PRIVATE_KEY}}" > github.pem
           chmod 400 github.pem
           ssh-keyscan ${{env.SERVER_HOST}} >> known_hosts
-      - name: test ssh setup
-       run: |
-        ssh server ls -lah
+      # - name: test ssh setup
+      #  run: |
+      #   ssh server ls -lah
       - name: upload built js files
         run: |
           cd ${{GIT_PROJECT_CLIENT_DIR}}
@@ -112,7 +112,6 @@ jobs:
           cp .env dist/ &&\
           cd dist &&\
           npx knex migrate:latest &&\
-          # npx knex seed:run &&\
           pm2 reload ${{PM2_NAME}} &&\
           echo done.
           "
