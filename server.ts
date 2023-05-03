@@ -5,11 +5,15 @@ import { tongueRecognitionRoute } from "./routes/tongue.route";
 import { HttpError } from "./error";
 import { print } from "listening-on";
 import { knex } from "./knex";
+import fs from "fs";
+
+const uploadDir = "uploads";
+fs.mkdirSync(uploadDir, { recursive: true });
 
 let app = express();
 
 app.use((req, res, next) => {
-  console.log(req.method, req.url, req.headers["user-agent"]);
+  // console.log(req.method, req.url, req.headers["user-agent"]);
   knex
     .insert({
       method: req.method,

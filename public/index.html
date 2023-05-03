@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Tongue Recognition</title>
-</head>
-<body>
+  </head>
+  <body>
     <p>welcome to my blog</p>
-   
-    
-</body>
+    <button id="start-camera">Start Camera</button>
+    <div>
+      <video id="video" width="320" height="240" autoplay></video>
+    </div>
+
+    <button id="click-photo">Click Photo</button>
+    <div>
+      <canvas id="canvas" width="320" height="240"></canvas>
+    </div>
+    <div>
+      <button id="uploadImageBtn">Diagnosis</button>
+    </div>
+
+    <script src="./js/camera.js"></script>
+  </body>
 </html>
