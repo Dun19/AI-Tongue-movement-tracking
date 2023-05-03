@@ -14,8 +14,11 @@ env:
   POSTGRES_HOST: postgres
   POSTGRES_PORT: 5432
   SERVER_HOST: 18.142.205.192
-  SERVER_DIR: web-server
+  GIT_PROJECT_CLIENT_DIR: web-client
+  GIT_PROJECT_SERVER_DIR: web-server
   SERVER_USER: tongueTest
+  SERVER_PROJECT_CLIENT_DIR: ~/tongueTest-Server/web-client
+  SERVER_PROJECT_SERVER_DIR: ~/tongueTest-Server/web-server
 
 jobs:
   test-and-build:
@@ -32,27 +35,31 @@ jobs:
           POSTGRES_PORT: ${{env.POSTGRES_PORT}}
     steps:
       - users: actions/checkout@v3
-      - name: npm install
+      - name: npm install in web-client
         run: |
-          cd ${{env.SERVER_DIR}}
+          cd ${{env.GIT_PROJECT_CLIENT_DIR}}
+          npm install
+      - name: npm install in web-server
+        run: |
+          cd ${{env.GIT_PROJECT_SERVER_DIR}}
           npm install
       - name: jest test
         run: |
-          cd ${{env.SERVER_DIR}}
+          cd ${{env.GIT_PROJECT_SERVER_DIR}}
           npm run ci
       - name: tsc build
         run: |
-          cd ${{env.SERVER_DIR}}
+          cd ${{env.GIT_PROJECT_SERVER_DIR}}
           npm run build
       - name: archive built js files
         uses: actions/upload-artifact@v3
         with: 
           name: tsc-output
-          path: ${{env.SERVER_DIR}}/dist
+          path: ${{env.GIT_PROJECT_SERVER_DIR}}/dist
 
 
   deploy:
-    if: github.ref_name == 'production'
+    # if: github.ref_name == 'production'
       runs-on: ubuntu-server
       needs: test-and-build
       steps:
@@ -60,10 +67,10 @@ jobs:
           uses: actions/download-artifact@v3
           with: 
             name: tsc-output
-            path: ${{env.SERVER_DIR}}
+            path: ${{env.GIT_PROJECT_SERVER_DIR}}
         - name: check restored files
           run: |
-            cd ${{env.SERVER_DIR}}
+            cd ${{env.GIT_PROJECT_SERVER_DIR}}
             ls -l dist
         - name: setup ssh credential
           run: |
@@ -79,4 +86,23 @@ jobs:
         - name: test ssh setup
          run: |
           ssh server ls -lah
-
+        - name: upload built js files
+          run: |
+            rsync -SavLP \
+              web-client\package.json \
+              web-client\public \
+              server:${{env.SERVER_PROJECT_CLIENT_DIR}}
+          run: |
+            rsync -SavLP \
+              web-server\dist \
+              web-server\package.json \
+              server:${{env.SERVER_PROJECT_SERVER_DIR}}
+        -name: update server
+          run: |
+            ssh server"
+            source ~/.nvm/nvm.sh && \
+            cd ${{SERVER_PROJECT_SERVER_DIR}} && \
+            npm i --omit=dev && \
+            
+            "
+            
