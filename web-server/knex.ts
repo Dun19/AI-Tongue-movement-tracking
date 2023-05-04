@@ -6,6 +6,6 @@ export function newKnex() {
   let profile = config[env.NODE_ENV];
 
   let knex = Knex(profile);
-
+  //test
   return knex;
 }
