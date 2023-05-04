@@ -35,7 +35,7 @@ jobs:
           POSTGRES_HOST: ${{env.POSTGRES_HOST}}
           POSTGRES_PORT: ${{env.POSTGRES_PORT}}
     steps:
-      - users: actions/checkout@v3
+      - uses: actions/checkout@v3
       - name: npm install in web-client
         run: |
           cd ${{env.GIT_PROJECT_CLIENT_DIR}}
@@ -104,14 +104,14 @@ jobs:
       - name: update server
         run: |
           ssh server"
-          source ~/.nvm/nvm.sh && \
-          cd ${{SERVER_PROJECT_CLIENT_DIR}}
-          npm i --omit=dev && \
-          cd ${{SERVER_PROJECT_SERVER_DIR}} && \
-          npm i --omit=dev && \
-          cp .env dist/ &&\
-          cd dist &&\
-          npx knex migrate:latest &&\
-          pm2 reload ${{PM2_NAME}} &&\
-          echo done!
+            source ~/.nvm/nvm.sh && \
+            cd ${{SERVER_PROJECT_CLIENT_DIR}}
+            npm i --omit=dev && \
+            cd ${{SERVER_PROJECT_SERVER_DIR}} && \
+            npm i --omit=dev && \
+            cp .env dist/ &&\
+            cd dist &&\
+            npx knex migrate:latest &&\
+            pm2 reload ${{PM2_NAME}} &&\
+            echo done!
           "
