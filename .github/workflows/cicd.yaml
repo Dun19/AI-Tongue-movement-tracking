@@ -52,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: client-esbuild-output
-          path: ${{env.GIT_PROJECT_SERVER_DIR}}/public/dist
+          path: ${{env.GIT_PROJECT_CLIENT_DIR}}/public/dist
       - name: npm install in web-server
         run: |
           cd ${{env.GIT_PROJECT_SERVER_DIR}}
@@ -81,12 +81,12 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: server-tsc-output
-          path: ${{env.GIT_PROJECT_SERVER_DIR}}
+          path: ${{env.GIT_PROJECT_SERVER_DIR}}/dist
       - name: restore built js files
         uses: actions/download-artifact@v3
         with:
           name: client-esbuild-output
-          path: ${{env.GIT_PROJECT_CLIENT_DIR}}
+          path: ${{env.GIT_PROJECT_CLIENT_DIR}}/public/dist
       # - name: check restored files
       #   run: |
       #     cd ${{env.GIT_PROJECT_SERVER_DIR}}
