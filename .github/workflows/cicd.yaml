@@ -89,14 +89,14 @@ jobs:
       #   ssh server ls -lah
       - name: upload built js files to web-client
         run: |
-          cd ${{GIT_PROJECT_CLIENT_DIR}}
+          cd ${{env.GIT_PROJECT_CLIENT_DIR}}
           rsync -SavLP \
             package.json \
             public \
             server:${{env.SERVER_PROJECT_CLIENT_DIR}}
       - name: upload built js files to web server
         run: |
-          cd ${{GIT_PROJECT_SERVER_DIR}}
+          cd ${{env.GIT_PROJECT_SERVER_DIR}}
           rsync -SavLP \
             dist \
             package.json \
