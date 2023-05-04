@@ -80,7 +80,7 @@ jobs:
           echo "Host server" >> config
           echo "  Hostname ${{env.SERVER_HOST}}" >> config
           echo "  User ${{env.SERVER_USER}}" >> config
-          echo "  IdentifyFile ~/.ssh/github.pem" >> config
+          echo "  IdentityFile = ~/.ssh/github.pem" >> config
           echo "${{secrets.SSH_PRIVATE_KEY}}" > github.pem
           chmod 400 github.pem
           ssh-keyscan ${{env.SERVER_HOST}} >> known_hosts
