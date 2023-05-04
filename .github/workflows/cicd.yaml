@@ -44,6 +44,10 @@ jobs:
         run: |
           cd ${{env.GIT_PROJECT_CLIENT_DIR}}
           npm run build
+      - name: test
+        run: |
+          cd ${{env.GIT_PROJECT_CLIENT_DIR}}
+          ls public
       - name: archive built js files in client
         uses: actions/upload-artifact@v3
         with:
