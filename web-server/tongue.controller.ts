@@ -2,6 +2,7 @@ import { HttpController } from "./httpController";
 import { ITongueService } from "./tongue.type";
 import formidable from "formidable";
 import { Request } from "express";
+import { HttpError } from "./error";
 
 export class TongueController extends HttpController {
   constructor(private tongueService: ITongueService) {
@@ -9,7 +10,7 @@ export class TongueController extends HttpController {
     this.router.post("/diagnosis", this.wrapMethod(this.postTongueImage));
   }
 
-  postTongueImage = (req: Request) => {
+  postTongueImage = async (req: Request) => {
     const uploadDir = "uploads";
     const form = formidable({
       uploadDir,
@@ -19,6 +20,24 @@ export class TongueController extends HttpController {
       filter: (part) => part.mimetype?.startsWith("image/") || false,
     });
 
-    return this.tongueService.postTongueImage(form, req);
+    let { fields, files } = await new Promise<{
+      fields: formidable.Fields;
+      files: formidable.Files;
+    }>((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve({ fields, files });
+      });
+    });
+
+    let imageMaybeArray = files.image;
+    let image = Array.isArray(imageMaybeArray)
+      ? imageMaybeArray[0]
+      : imageMaybeArray;
+    let filename = image?.newFilename;
+
+    if (!filename) throw new HttpError(400, "missing tongue image");
+
+    return this.tongueService.postTongueImage(filename);
   };
 }
