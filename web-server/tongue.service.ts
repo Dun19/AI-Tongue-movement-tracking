@@ -21,7 +21,7 @@ export class TongueService implements ITongueService {
         method: "POST",
         body: formData,
       });
-      let json = await res.json();
+      json = await res.json();
     });
 
     return { json };
