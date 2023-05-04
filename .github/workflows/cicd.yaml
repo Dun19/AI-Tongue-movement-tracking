@@ -146,9 +146,5 @@ jobs:
         run: |
           ssh server "
             cd ${{env.SERVER_PROJECT_AI_SERVER_DIR}} && \
-            python -m venv .pyenv && \
-            source .pyenv/scripts/activate.ps1 && \
-            pip install -r requirements.txt && \
-            pm2 reload ${{env.PM2_AI_SERVER_NAME}} &&\
             echo done!
           "
