@@ -16,6 +16,7 @@ env:
   SERVER_HOST: 18.142.205.192
   GIT_PROJECT_CLIENT_DIR: web-client
   GIT_PROJECT_SERVER_DIR: web-server
+  GIT_PROJECT_AI_SERVER_DIR: ai-server
   SERVER_USER: tongueTest
   SERVER_PROJECT_CLIENT_DIR: ~/tongueTest-Server/web-client
   SERVER_PROJECT_SERVER_DIR: ~/tongueTest-Server/web-server
@@ -123,7 +124,7 @@ jobs:
             server:${{env.SERVER_PROJECT_SERVER_DIR}}
       - name: upload ai server to ubuntu server
         run: |
-          cd ${{env.SERVER_PROJECT_AI_SERVER_DIR}}
+          cd ${{env.GIT_PROJECT_AI_SERVER_DIR}}
           rsync -SavLP \
             server.py \
             requirements.txt \
@@ -145,6 +146,10 @@ jobs:
       - name: update ai-server
         run: |
           ssh server "
-            cd ${{env.SERVER_PROJECT_AI_SERVER_DIR}} && \
+            cd  ${{env.SERVER_PROJECT_AI_SERVER_DIR}} && \
+            python -m venv .pyenv && \
+            source .pyenv/Scripts/activate.ps1 && \
+            pip install -r requirements.txt && \
+            pm2 reload ${{env.PM2_AI_SERVER_NAME}} &&\
             echo done!
           "
