@@ -19,7 +19,9 @@ env:
   SERVER_USER: tongueTest
   SERVER_PROJECT_CLIENT_DIR: ~/tongueTest-Server/web-client
   SERVER_PROJECT_SERVER_DIR: ~/tongueTest-Server/web-server
-  PM2_NAME: tongueTest-Server
+  SERVER_PROJECT_AI_SERVER_DIR: ~/tongueTest-Server/ai-server
+  PM2_WEB_SERVER_NAME: tongueTest-Server
+  PM2_AI_SERVER_NAME: ai-Server
 
 jobs:
   test-and-build:
@@ -119,7 +121,14 @@ jobs:
             dist \
             package.json \
             server:${{env.SERVER_PROJECT_SERVER_DIR}}
-      - name: update server
+      - name: upload ai server to ubuntu server
+        run: |
+          cd ${{env.SERVER_PROJECT_AI_SERVER_DIR}}
+          rsync -SavLP \
+            server.py \
+            requirements.txt \
+            server:${{env.SERVER_PROJECT_AI_SERVER_DIR}}
+      - name: update web-client and server
         run: |
           ssh server "
             source ~/.nvm/nvm.sh && \
@@ -130,6 +139,16 @@ jobs:
             cp .env dist/ &&\
             cd dist &&\
             npx knex migrate:latest &&\
-            pm2 reload ${{env.PM2_NAME}} &&\
+            pm2 reload ${{env.PM2_WEB_SERVER_NAME}} &&\
+            echo done!
+          "
+      - name: update ai-server
+        run: |
+          ssh server "
+            cd ${{env.SERVER_PROJECT_AI_SERVER_DIR}} && \
+            python -m venv .pyenv && \
+            source .pyenv/scripts/activate.ps1 && \
+            pip install -r requirements.txt && \
+            pm2 reload ${{env.PM2_AI_SERVER_NAME}} &&\
             echo done!
           "
