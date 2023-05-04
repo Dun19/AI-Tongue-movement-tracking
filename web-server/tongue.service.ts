@@ -13,15 +13,13 @@ export class TongueService implements ITongueService {
       if (err) {
         return;
       }
-
       let formData = new FormData();
-      formData.set("image", new Blob());
-      // formData.set("image", files);
       let res = await fetch("http://127.0.0.1:8100/detect", {
         method: "POST",
         body: formData,
       });
       json = await res.json();
+      console.log(json);
     });
 
     return { json };
