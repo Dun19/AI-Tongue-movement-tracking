@@ -101,7 +101,7 @@ jobs:
             dist \
             package.json \
             server:${{env.SERVER_PROJECT_SERVER_DIR}}
-      -name: update server
+      - name: update server
         run: |
           ssh server"
           source ~/.nvm/nvm.sh && \
