@@ -105,7 +105,7 @@ jobs:
         run: |
           ssh server"
             source ~/.nvm/nvm.sh && \
-            cd ${{env.SERVER_PROJECT_CLIENT_DIR}}
+            cd ${{env.SERVER_PROJECT_CLIENT_DIR}} && \
             npm i --omit=dev && \
             cd ${{env.SERVER_PROJECT_SERVER_DIR}} && \
             npm i --omit=dev && \
