@@ -40,6 +40,15 @@ jobs:
         run: |
           cd ${{env.GIT_PROJECT_CLIENT_DIR}}
           npm install
+      - name: client-esbuild
+        run: |
+          cd ${{env.GIT_PROJECT_CLIENT_DIR}}
+          npm run build
+      - name: archive built js files in client
+        uses: actions/upload-artifact@v3
+        with:
+          name: client-esbuild-output
+          path: ${{env.GIT_PROJECT_SERVER_DIR}}/public/dist
       - name: npm install in web-server
         run: |
           cd ${{env.GIT_PROJECT_SERVER_DIR}}
@@ -52,10 +61,10 @@ jobs:
         run: |
           cd ${{env.GIT_PROJECT_SERVER_DIR}}
           npm run build
-      - name: archive built js files
+      - name: archive built js files in server
         uses: actions/upload-artifact@v3
         with:
-          name: tsc-output
+          name: server-tsc-output
           path: ${{env.GIT_PROJECT_SERVER_DIR}}/dist
 
   deploy:
@@ -67,8 +76,13 @@ jobs:
       - name: restore built js files
         uses: actions/download-artifact@v3
         with:
-          name: tsc-output
+          name: server-tsc-output
           path: ${{env.GIT_PROJECT_SERVER_DIR}}
+      - name: restore built js files
+        uses: actions/download-artifact@v3
+        with:
+          name: client-esbuild-output
+          path: ${{env.GIT_PROJECT_CLIENT_DIR}}
       # - name: check restored files
       #   run: |
       #     cd ${{env.GIT_PROJECT_SERVER_DIR}}
