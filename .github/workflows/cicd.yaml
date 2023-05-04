@@ -63,7 +63,7 @@ jobs:
     if: github.ref_name == 'production'
     runs-on: ubuntu-latest
     needs: test-and-build
-    steps:
+    steps: 
       - uses: actions/checkout@v3
       - name: restore built js files
         uses: actions/download-artifact@v3
