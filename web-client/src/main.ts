@@ -31,12 +31,15 @@ click_button.addEventListener("click", () => {
     let file = dataURItoFile(imageDataUrl);
     let formData = new FormData();
     formData.set("image", file);
-    let res = await fetch("/detect", { method: "POST", body: formData });
+    let res = await fetch("/diagnosis", {
+      method: "POST",
+      body: formData,
+    });
     let json = await res.json();
     if (!json) {
       result.textContent = "error";
     }
-    result.textContent = json;
+    result.textContent = json.result;
   });
 });
 

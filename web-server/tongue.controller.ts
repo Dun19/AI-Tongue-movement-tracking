@@ -6,7 +6,7 @@ import { Request } from "express";
 export class TongueController extends HttpController {
   constructor(private tongueService: ITongueService) {
     super();
-    this.router.post("/detect", this.wrapMethod(this.postTongueImage));
+    this.router.post("/diagnosis", this.wrapMethod(this.postTongueImage));
   }
 
   postTongueImage = (req: Request) => {
