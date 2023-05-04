@@ -104,14 +104,6 @@ jobs:
       - name: update server
         run: |
           ssh server"
-            source ~/.nvm/nvm.sh && \
-            cd ${{env.SERVER_PROJECT_CLIENT_DIR}} && \
-            npm i --omit=dev && \
-            cd ${{env.SERVER_PROJECT_SERVER_DIR}} && \
-            npm i --omit=dev && \
-            cp .env dist/ &&\
-            cd dist &&\
-            npx knex migrate:latest &&\
-            pm2 reload ${{env.PM2_NAME}} &&\
+            ls -a
             echo done!
           "
