@@ -1,5 +1,8 @@
 from sanic import Sanic
 from sanic.response import json, text
+import cv2
+
+
 
 app = Sanic("Tongue-Detection-Server")
 
@@ -9,7 +12,11 @@ def index_page(request):
 
 @app.route("/detect",methods=['POST'])
 def detect(request):
-    print(request)
-    return json({'result':'TODO'})
+    filename = request.json['filename']
+    filePath = '../web-server/uploads/'+str(filename)
+    img = cv2.imread(filePath)
+
+    return json({'result':"todo"})
 
 app.run(port=8100,single_process=True)
+

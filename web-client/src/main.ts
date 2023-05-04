@@ -36,6 +36,7 @@ click_button.addEventListener("click", () => {
       body: formData,
     });
     let json = await res.json();
+    console.log(json);
     if (!json) {
       result.textContent = "error";
     }
