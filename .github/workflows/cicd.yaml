@@ -54,20 +54,19 @@ jobs:
           npm run build
       - name: archive built js files
         uses: actions/upload-artifact@v3
-        with: 
+        with:
           name: tsc-output
           path: ${{env.GIT_PROJECT_SERVER_DIR}}/dist
-
 
   deploy:
     if: github.ref_name == 'production'
     runs-on: ubuntu-latest
     needs: test-and-build
-    steps: 
+    steps:
       - uses: actions/checkout@v3
       - name: restore built js files
         uses: actions/download-artifact@v3
-        with: 
+        with:
           name: tsc-output
           path: ${{env.GIT_PROJECT_SERVER_DIR}}
       # - name: check restored files
@@ -88,13 +87,14 @@ jobs:
       # - name: test ssh setup
       #  run: |
       #   ssh server ls -lah
-      - name: upload built js files
+      - name: upload built js files to web-client
         run: |
           cd ${{GIT_PROJECT_CLIENT_DIR}}
           rsync -SavLP \
             package.json \
             public \
             server:${{env.SERVER_PROJECT_CLIENT_DIR}}
+      - name: upload built js files to web server
         run: |
           cd ${{GIT_PROJECT_SERVER_DIR}}
           rsync -SavLP \
@@ -115,4 +115,3 @@ jobs:
           pm2 reload ${{PM2_NAME}} &&\
           echo done!
           "
-          
