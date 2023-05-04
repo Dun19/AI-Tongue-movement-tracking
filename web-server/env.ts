@@ -26,22 +26,22 @@ export const env = {
   POSTGRES_DB_HOST: "",
   POSTGRES_DB_PORT: 5432,
 };
-if (process.env.NODE_ENV != "test") {
-  env.TEST_DB_NAME = "skip";
-  env.TEST_DB_USERNAME = "skip";
-  env.TEST_DB_PASSWORD = "skip";
-}
-if (process.env.NODE_ENV != "ci") {
-  env.POSTGRES_DB = "skip";
-  env.POSTGRES_DB_USER = "skip";
-  env.POSTGRES_DB_PASSWORD = "skip";
-  env.POSTGRES_DB_HOST = "skip";
-}
+// if (process.env.NODE_ENV != "test") {
+//   env.TEST_DB_NAME = "skip";
+//   env.TEST_DB_USERNAME = "skip";
+//   env.TEST_DB_PASSWORD = "skip";
+// }
+// if (process.env.NODE_ENV != "ci") {
+//   env.POSTGRES_DB = "skip";
+//   env.POSTGRES_DB_USER = "skip";
+//   env.POSTGRES_DB_PASSWORD = "skip";
+//   env.POSTGRES_DB_HOST = "skip";
+// }
 
-if (process.env.NODE_ENV == "test" || process.env.NODE_ENV == "ci") {
-  env.DB_NAME = "skip";
-  env.DB_USERNAME = "skip";
-  env.DB_PASSWORD = "skip";
-}
+// if (process.env.NODE_ENV == "test" || process.env.NODE_ENV == "ci") {
+//   env.DB_NAME = "skip";
+//   env.DB_USERNAME = "skip";
+//   env.DB_PASSWORD = "skip";
+// }
 
 populateEnv(env, { mode: "halt" });
