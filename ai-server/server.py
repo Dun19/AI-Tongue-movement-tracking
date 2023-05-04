@@ -12,6 +12,7 @@ def index_page(request):
 
 @app.route("/detect",methods=['POST'])
 def detect(request):
+    print(request.json)
     filename = request.json['filename']
     filePath = '../web-server/uploads/'+str(filename)
     img = cv2.imread(filePath)
