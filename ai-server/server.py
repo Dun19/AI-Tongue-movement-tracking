@@ -1,6 +1,5 @@
 from sanic import Sanic
 from sanic.response import json, text
-import cv2
 
 app = Sanic("Tongue-Detection-Server")
 
