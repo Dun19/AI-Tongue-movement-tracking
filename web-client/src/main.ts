@@ -25,25 +25,24 @@ click_button.addEventListener("click", () => {
     return;
   }
   context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-  uploadImageBtn.addEventListener("click", async () => {
-    let imageDataUrl = canvas.toDataURL("image/jpeg", 0.5);
-    let file = dataURItoFile(imageDataUrl);
-    let formData = new FormData();
-    formData.set("image", file);
-    let res = await fetch("/diagnosis", {
-      method: "POST",
-      body: formData,
-    });
-    let json = await res.json();
-    console.log(json);
-    if (!json) {
-      result.textContent = "error";
-    }
-    result.textContent = json.result;
-  });
 });
-
+uploadImageBtn.addEventListener("click", async () => {
+  let imageDataUrl = canvas.toDataURL("image/jpeg", 0.5);
+  let file = dataURItoFile(imageDataUrl);
+  let formData = new FormData();
+  formData.set("image", file);
+  console.log(formData);
+  let res = await fetch("/diagnosis", {
+    method: "POST",
+    body: formData,
+  });
+  let json = await res.json();
+  console.log(json);
+  if (!json) {
+    result.textContent = "error";
+  }
+  result.textContent = json.result;
+});
 // async function main() {
 //   let canvas = document.querySelector("canvas#painter") as HTMLCanvasElement;
 // let context = canvas.getContext("2d");

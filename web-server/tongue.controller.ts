@@ -3,6 +3,8 @@ import { ITongueService } from "./tongue.type";
 import formidable from "formidable";
 import { Request, Response, NextFunction } from "express";
 import { HttpError } from "./error";
+import { join } from "path";
+import { unlink } from "fs";
 
 async function formParse(req: Request, res: Response, next: NextFunction) {
   try {
@@ -24,7 +26,7 @@ async function formParse(req: Request, res: Response, next: NextFunction) {
         else resolve({ fields, files });
       });
     });
-
+    // console.log(files);
     let imageMaybeArray = files.image;
     let image = Array.isArray(imageMaybeArray)
       ? imageMaybeArray[0]
@@ -51,6 +53,13 @@ export class TongueController extends HttpController {
   }
 
   postTongueImage = async (req: Request) => {
-    return this.tongueService.postTongueImage(req.body.filename);
+    let result = this.tongueService.postTongueImage(req.body.filename);
+    let file = join("uploads", req.body.filename);
+    unlink(file, (err) => {
+      if (err) {
+        console.log("failed to delete empty file:", err);
+      }
+    });
+    return result;
   };
 }
