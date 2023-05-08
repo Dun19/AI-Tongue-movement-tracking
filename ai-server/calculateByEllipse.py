@@ -1,9 +1,6 @@
 import cv2
-import numpy as np
-from scipy import stats
-import matplotlib.pyplot as plt
 import math
-
+import numpy as np
 
 def find_center_point(img: cv2.Mat):
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -27,13 +24,13 @@ def find_distance_of_two_points(point1, point2):
     return math.sqrt(sum)
 
 
-def find_tongue_angle_and_length(path):
-    img = cv2.imread(path)
+def find_tongue_angle_and_length(img):
+    
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    _, tongue_binary = cv2.threshold(
+    _, binary = cv2.threshold(
         gray, 10, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(
-        tongue_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     areas = [cv2.contourArea(c) for c in contours]
     max_index = np.argmax(areas)
@@ -79,16 +76,15 @@ def find_tongue_angle_and_length(path):
                color=(0, 0, 255), thickness=15)
     cv2.circle(img, (int(x2), int(y2)), radius=0,
                color=(255, 0, 0), thickness=15)
+    
 
-    cv2.imshow('img', img)
-    cv2.waitKey(0)
-    return (angle, find_distance_of_two_points((x1, y1), (x2, y2)))
+    return (img,angle, find_distance_of_two_points((x1, y1), (x2, y2)))
 
 
-angle, distance = find_tongue_angle_and_length('tongue.jpg')
-angle1, distance1 = find_tongue_angle_and_length('tongue1.jpeg')
-print(angle-90,distance)
-print(angle1-90,distance1)
+# angle, distance = find_tongue_angle_and_length('tongue.jpg')
+# angle1, distance1 = find_tongue_angle_and_length('tongue1.jpeg')
+# print(angle-90,distance)
+# print(angle1-90,distance1)
 
 
 def gamma_trans(img, gamma):  # gamma函数处理
@@ -96,20 +92,60 @@ def gamma_trans(img, gamma):  # gamma函数处理
     gamma_table = np.round(np.array(gamma_table)).astype(np.uint8)  # 颜色值为整数
     return cv2.LUT(img, gamma_table)  # 图片颜色查表。另外可以根据光强（颜色）均匀化原则设计自适应算法。
  
-def nothing(x):
-    pass
- 
-file_path = 'test5.jpeg'
-img_gray=cv2.imread(file_path,0)   # 灰度图读取，用于计算gamma值
-img = cv2.imread(file_path)    # 原图读取
- 
-mean = np.mean(img_gray)
-gamma_val = math.log10(0.5)/math.log10(mean*255)    # 公式计算gamma
- 
-# image_gamma_correct = gamma_trans(img, gamma_val)   # gamma变换
- 
-# print(mean,np.mean(image_gamma_correct))
 
-# cv2.imshow('image_raw', img)
-# cv2.imshow('image_gamma', image_gamma_correct)
+def apply_gamma_to_image(file_path):
+    img_gray=cv2.imread(file_path,0)   # 灰度图读取，用于计算gamma值
+    img = cv2.imread(file_path)    # 原图读取
+    
+    mean = np.mean(img_gray)
+    gamma_val = math.log10(0.5)/math.log10(mean*255)    # 公式计算gamma
+    
+    image_gamma_correct = gamma_trans(img, gamma_val)   # gamma变换
+    return image_gamma_correct
+
+
+# cap = cv2.VideoCapture('./photos/raw_photos/練習一_舌頭向前_new.mp4')
+# while True:
+#     ret, frame = cap.read()
+#     # if frame is read correctly ret is True
+#     if not ret:
+#         print("Can't receive frame (stream end?). Exiting ...")
+#         break
+#     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+#     cv2.imshow('frame', gray)
+
 # cv2.waitKey(0)
+# # cv2.imshow('image_raw', img)
+# # cv2.imshow('image_gamma', image_gamma_correct)
+# # cv2.waitKey(0)
+# cap.release()
+# cv2.destroyAllWindows()
+
+def video_to_image(path,interval):
+    fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+    out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640,  480))
+    frame_count = 0 
+    frame_index = 0 
+
+    cap = cv2.VideoCapture(path)
+
+    if cap.isOpened():
+        success = True
+    else:
+        success = False
+
+    while cap.isOpened():
+        success, frame = cap.read()
+        if success is False:
+            break
+        if frame_index % interval == 0:
+            img,_,_ = find_tongue_angle_and_length(frame)
+            img1 = cv2.flip(img, 0)
+            out.write(img1)
+            frame_count = frame_count +1
+        frame_index += 1
+    # cap.release()
+    # out.release()
+    # cv2.destroyAllWindows()
+
+video_to_image('./photos/raw_photos/練習一_舌頭向前_new.mp4',3)
