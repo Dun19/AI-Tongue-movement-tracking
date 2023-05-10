@@ -144,13 +144,13 @@ def is_video(path):
         return True
     else:
         return False
-
+file_index=0
 
 def main (path_in,path_out):
     model = YOLO("yolomodel/best.pt")
-    predict = model.predict(
-    source=path_in, save=False, conf=0.90, save_txt=True,vid_stride=1)
-    file_index=0
+    # predict = model.predict(
+    # source=path_in, save=False, conf=0.90, save_txt=True,vid_stride=30)
+    interval=1
     fourcc = cv2.VideoWriter_fourcc(*'DIVX')
     path_out_video = os.path.join(path_out,'result.avi')
     out = cv2.VideoWriter(path_out_video, fourcc, 23, (640,  480))
@@ -161,19 +161,28 @@ def main (path_in,path_out):
         path_out_img = os.path.join(path_out,str(file_index)+'.jpg')
         cv2.imwrite(path_out_img,img_raw)
     elif is_video(path_in):
-        for i in range(476):
-            if predict[i].masks is not None:
-                img_unit8  = (predict[i].masks.data[0].numpy() * 255).astype("uint8")
-                img_raw,_,_ = find_tongue_angle_and_length(img_unit8,img_unit8)
-                img = cv2.resize(img_raw, (640, 480))
-                out.write(img)
-                path_out_img = os.path.join(path_out,str(file_index)+'.jpg')
-                cv2.imwrite(path_out_img,img)
-                file_index =file_index +1
+        frame_count = 0 
+        frame_index = 0 
+        
+        cap = cv2.VideoCapture(path_in)
 
-    pass
+        while cap.isOpened():
+            success, frame = cap.read()
+            if success is False:
+                break
+            if frame_index % interval == 0:
+                print(frame)
+                predict = model.predict(source=frame, save=False, conf=0.90, save_txt=False)
+                if predict[0].masks is not None:
+                    img_unit8  = (predict[0].masks.data[0].numpy() * 255).astype("uint8")
+                    img,_,_ = find_tongue_angle_and_length(img_unit8,img_unit8)
+                    path_out_img = os.path.join(path_out,str(frame_count)+'.jpg')
+                    cv2.imwrite(path_out_img,img)
+                    frame_count = frame_count +1
+            frame_index += 1
+        pass
 
-main(r'.\photos\raw_photos\練習一_舌頭向前_new.mp4',r'.\result')
+main(r'.\photos\raw_photos\練習一_舌頭向前_new.mp4',r'.\result1')
 
 # out.release()
 # cap.release()
