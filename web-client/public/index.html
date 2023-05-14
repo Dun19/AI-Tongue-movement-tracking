@@ -19,9 +19,19 @@
     <div>
       <button id="uploadImageBtn">Diagnosis</button>
     </div>
+    <form
+      action="/diagnosis"
+      method="POST"
+      enctype="multipart/form-data"
+      id="uploadForm"
+    >
+      <input type="file" name="file" />
+      <input type="submit" value="submit" />
+    </form>
     <div>
       <label for="">Result: </label>
-      <div id="result"></div>
+      <img src="" id="resultImg" alt="" />
+      <video src="" id="'resultVideo"></video>
     </div>
 
     <script src="dist/bundle.js"></script>

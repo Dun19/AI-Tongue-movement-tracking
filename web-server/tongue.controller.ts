@@ -13,8 +13,15 @@ async function formParse(req: Request, res: Response, next: NextFunction) {
       uploadDir,
       keepExtensions: true,
       maxFiles: 1,
-      maxFileSize: 1024 ** 2 * 200, // the default limit is 200KB
-      filter: (part) => part.mimetype?.startsWith("image/") || false,
+      maxFileSize: 1024 ** 2 * 500, // the default limit is 200KB
+      filter: (part) => {
+        if (
+          part.mimetype?.startsWith("image/") ||
+          part.mimetype?.startsWith("video/")
+        ) {
+          return true;
+        } else return false;
+      },
     });
 
     let { fields, files } = await new Promise<{
@@ -26,12 +33,11 @@ async function formParse(req: Request, res: Response, next: NextFunction) {
         else resolve({ fields, files });
       });
     });
-    // console.log(files);
-    let imageMaybeArray = files.image;
-    let image = Array.isArray(imageMaybeArray)
-      ? imageMaybeArray[0]
-      : imageMaybeArray;
-    let filename = image?.newFilename;
+    console.log(files.file);
+
+    let MaybeArray = files.file;
+    let file = Array.isArray(MaybeArray) ? MaybeArray[0] : MaybeArray;
+    let filename = file?.newFilename;
 
     if (!filename) throw new HttpError(400, "missing tongue image");
 
@@ -50,10 +56,11 @@ export class TongueController extends HttpController {
       formParse,
       this.wrapMethod(this.postTongueImage)
     );
+    this.router.get("/result/:path", this.getResult);
   }
 
   postTongueImage = async (req: Request) => {
-    let result = this.tongueService.postTongueImage(req.body.filename);
+    let result = await this.tongueService.postTongueImage(req.body.filename);
     let file = join("uploads", req.body.filename);
     unlink(file, (err) => {
       if (err) {
@@ -61,5 +68,12 @@ export class TongueController extends HttpController {
       }
     });
     return result;
+  };
+
+  getResult = (req: Request, res: Response) => {
+    let path = req.params.path;
+    let result = this.tongueService.getResult(path);
+    //@ts-ignore
+    res.sendFile(result.path);
   };
 }
