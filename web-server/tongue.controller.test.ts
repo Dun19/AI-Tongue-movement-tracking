@@ -1,10 +1,7 @@
 import { mockRequest } from "./mock";
 import { ITongueService } from "./tongue.type";
 import { TongueController } from "./tongue.controller";
-import { TongueService } from "./tongue.service";
-import { newKnex } from "./knex";
 import { Request } from "express";
-import { unlink } from "fs";
 
 let ITongueServiceMock: ITongueService;
 

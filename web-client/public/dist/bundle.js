@@ -667,7 +667,7 @@
         return dataURL;
       }
       exports.compressImageToBase64 = compressImageToBase64;
-      function canvasToBlob2(canvas2, mimeType, quality) {
+      function canvasToBlob(canvas2, mimeType, quality) {
         return new Promise((resolve, reject) => canvas2.toBlob((blob) => {
           if (blob) {
             resolve(blob);
@@ -676,7 +676,7 @@
           }
         }, mimeType, quality));
       }
-      exports.canvasToBlob = canvasToBlob2;
+      exports.canvasToBlob = canvasToBlob;
       async function compressImageToBlob(args) {
         const { image, canvas: canvas2, ctx, maximumSize, quality } = populateCompressArgs(args);
         canvas2.width = image.width;
@@ -686,11 +686,11 @@
         let blob;
         if (args.mimeType) {
           mimeType = args.mimeType;
-          blob = await canvasToBlob2(canvas2, mimeType, quality);
+          blob = await canvasToBlob(canvas2, mimeType, quality);
         } else {
           const [png, jpeg] = await Promise.all([
-            canvasToBlob2(canvas2, "image/png", quality),
-            canvasToBlob2(canvas2, "image/jpeg", quality)
+            canvasToBlob(canvas2, "image/png", quality),
+            canvasToBlob(canvas2, "image/jpeg", quality)
           ]);
           if (jpeg.size < png.size) {
             mimeType = "image/jpeg";
@@ -713,7 +713,7 @@
           canvas2.width = new_width;
           canvas2.height = new_height;
           ctx.drawImage(image, 0, 0, new_width, new_height);
-          blob = await canvasToBlob2(canvas2, mimeType, quality);
+          blob = await canvasToBlob(canvas2, mimeType, quality);
         }
         return blob;
       }

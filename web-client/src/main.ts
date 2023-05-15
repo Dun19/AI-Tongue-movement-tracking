@@ -1,6 +1,4 @@
-import { canvasToBlob, dataURItoFile } from "@beenotung/tslib/image";
-import { Buffer } from "buffer";
-import { log } from "console";
+import { dataURItoFile } from "@beenotung/tslib/image";
 
 let camera_button = document.querySelector(
   "#start-camera"

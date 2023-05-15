@@ -1,19 +1,21 @@
 import express, { Request, Response, NextFunction } from "express";
 import { env } from "./env";
 // import { userRoute } from "./routes/user.route";
-import { tongueRoute } from "./routes/tongue.route";
 import { HttpError } from "./error";
 import { print } from "listening-on";
 import { newKnex } from "./knex";
 import fs from "fs";
+import { TongueController } from "./tongue.controller";
+import { TongueService } from "./tongue.service";
 
 const uploadDir = "uploads";
 fs.mkdirSync(uploadDir, { recursive: true });
 
 let app = express();
 
+let knex = newKnex();
+
 app.use((req, res, next) => {
-  let knex = newKnex();
   knex
     .insert({
       method: req.method,
@@ -32,8 +34,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // app.use(userRoute);
-
-app.use(tongueRoute);
+let tongueService = new TongueService(knex);
+let tongueController = new TongueController(tongueService);
+app.use(tongueController.router);
 
 app.use((req, res, next) => {
   next(new HttpError(404, "route not found"));
