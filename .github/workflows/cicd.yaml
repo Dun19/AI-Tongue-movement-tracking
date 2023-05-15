@@ -141,6 +141,9 @@ jobs:
       - name: update web-client and server1
         run: |
           ssh server "
+            source ~/.nvm/nvm.sh && \
+            cd ${{env.SERVER_PROJECT_SERVER_DIR}} && \
+            npm i --omit=dev && \
             cp .env dist/ &&\
             cd dist &&\
             npx knex migrate:latest &&\
