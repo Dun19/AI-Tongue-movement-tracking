@@ -138,6 +138,10 @@ jobs:
             cd ${{env.SERVER_PROJECT_SERVER_DIR}} && \
             npm i --omit=dev && \
             cp .env dist/ &&\
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
           "
       - name: update web-client and server1
         run: |
