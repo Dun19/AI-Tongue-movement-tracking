@@ -20,7 +20,7 @@ def detect(request):
     if model.is_image(filename_result):
         mimetype = 'image'
 
-    # filename_result = os.path.join('..', 'ai-server', str(filename_result))
+    # filename_result = os.path.join('..', 'ai-server', str(filename_result)) 1
 
     return json({'result_path': filename_result, 'mimetype': mimetype})
 
