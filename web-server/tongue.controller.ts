@@ -62,7 +62,7 @@ export class TongueController extends HttpController {
     let file = join("uploads", req.body.filename);
     unlink(file, (err) => {
       if (err) {
-        console.log("failed to delete empty file:", err);
+        // console.log("failed to delete empty file:", err);
       }
     });
     return result;

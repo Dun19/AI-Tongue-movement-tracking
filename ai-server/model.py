@@ -224,11 +224,11 @@ def diagnose (path_in,path_out):
     elif is_video(path_in):
         frame_count = 0 
         frame_index = 0 
-        interval=10
-        fourcc = cv2.VideoWriter_fourcc(*'DIVX')
-        next_file_name= (next_filename_of_type(path_out,'avi'))
+        interval=20
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        next_file_name= (next_filename_of_type(path_out,'mp4'))
         
-        path_out = os.path.join(path_out,str(next_file_name)+'.avi')
+        path_out = os.path.join(path_out,str(next_file_name)+'.mp4')
         cap = cv2.VideoCapture(path_in)
         width=to_nearest_32x_int(cap.get(3))
         height=to_nearest_32x_int(cap.get(4))

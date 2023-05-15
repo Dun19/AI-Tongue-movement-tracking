@@ -1,5 +1,6 @@
 import { canvasToBlob, dataURItoFile } from "@beenotung/tslib/image";
 import { Buffer } from "buffer";
+import { log } from "console";
 
 let camera_button = document.querySelector(
   "#start-camera"
@@ -25,6 +26,7 @@ uploadForm.addEventListener("submit", async (event) => {
     body: formData,
   });
   let json = await res.json();
+
   if (json.mimetype == "image") {
     resultImg.src = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
       "base64"
@@ -34,14 +36,25 @@ uploadForm.addEventListener("submit", async (event) => {
   }
   console.log(resultVideo);
   if (json.mimetype == "video") {
-    resultVideo.src = `data:video/avi;base64,${Buffer.from(json.data).toString(
+    resultVideo.src = `data:video/mp4;base64,${Buffer.from(json.data).toString(
       "base64"
     )}`;
-    console.log(1);
-    resultVideo.load();
-    console.log(2);
-    // resultVideo.play();
-    console.log(3);
+
+    // let uint8Array = new Uint8Array(json.data);
+    // let arrayBuffer = uint8Array.buffer;
+    // let blob = new Blob([arrayBuffer]);
+    // let url = URL.createObjectURL(blob);
+    // // console.log(videoSrc);
+
+    // resultVideo.innerHTML = `
+    // <video width="320" height="240" src=${url} controls>
+    // </video>
+    // `;
+    // console.log(1);
+    // resultVideo.load();
+    // console.log(2);
+    // // resultVideo.play();
+    // console.log(3);
   }
 });
 
