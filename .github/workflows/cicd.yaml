@@ -146,6 +146,7 @@ jobs:
       - name: update ai-server
         run: |
           ssh server "
+            source ~/.nvm/nvm.sh && \
             cd  ${{env.SERVER_PROJECT_AI_SERVER_DIR}} && \
             pip install -r requirements.txt && \
             pm2 reload ${{env.PM2_AI_SERVER_NAME}} &&\
