@@ -33,7 +33,6 @@ async function formParse(req: Request, res: Response, next: NextFunction) {
         else resolve({ fields, files });
       });
     });
-    console.log(files.file);
 
     let MaybeArray = files.file;
     let file = Array.isArray(MaybeArray) ? MaybeArray[0] : MaybeArray;
@@ -56,7 +55,6 @@ export class TongueController extends HttpController {
       formParse,
       this.wrapMethod(this.postTongueImage)
     );
-    this.router.get("/result/:path", this.getResult);
   }
 
   postTongueImage = async (req: Request) => {
@@ -68,12 +66,5 @@ export class TongueController extends HttpController {
       }
     });
     return result;
-  };
-
-  getResult = (req: Request, res: Response) => {
-    let path = req.params.path;
-    let result = this.tongueService.getResult(path);
-    //@ts-ignore
-    res.sendFile(result.path);
   };
 }

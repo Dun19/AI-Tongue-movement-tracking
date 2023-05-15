@@ -1,4 +1,5 @@
 import { canvasToBlob, dataURItoFile } from "@beenotung/tslib/image";
+import { Buffer } from "buffer";
 
 let camera_button = document.querySelector(
   "#start-camera"
@@ -24,10 +25,24 @@ uploadForm.addEventListener("submit", async (event) => {
     body: formData,
   });
   let json = await res.json();
-  console.log(json.data);
-  let img64 = json.data.data.toString("base64");
-  console.log(img64);
-  resultImg.src = "data:image/jpeg;base64," + img64;
+  if (json.mimetype == "image") {
+    resultImg.src = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
+      "base64"
+    )}`;
+    resultImg.height = 240;
+    resultImg.height = 320;
+  }
+  console.log(resultVideo);
+  if (json.mimetype == "video") {
+    resultVideo.src = `data:video/avi;base64,${Buffer.from(json.data).toString(
+      "base64"
+    )}`;
+    console.log(1);
+    resultVideo.load();
+    console.log(2);
+    // resultVideo.play();
+    console.log(3);
+  }
 });
 
 camera_button.addEventListener("click", async () => {
@@ -56,23 +71,22 @@ uploadImageBtn.addEventListener("click", async () => {
     body: formData,
   });
 
-  //@ts-ignore
   let json = await res.json();
-  console.log(json);
-  //@ts-ignore
+
   if (json.mimetype == "image") {
-    //@ts-ignore
-
-    console.log("/result/" + json.data);
-
-    resultImg.src = "data:image/jpeg;base64," + btoa(json.data);
+    resultImg.src = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
+      "base64"
+    )}`;
+    resultImg.height = 240;
+    resultImg.height = 320;
   }
-
-  // if (!res) {
-  //   result.textContent = "error";
-  // }
-  // result.textContent = "1";
+  if (json.mimetype == "video") {
+    resultVideo.src = `data:video/avi;base64,${Buffer.from(json.data).toString(
+      "base64"
+    )}`;
+  }
 });
+
 // async function main() {
 //   let canvas = document.querySelector("canvas#painter") as HTMLCanvasElement;
 // let context = canvas.getContext("2d");

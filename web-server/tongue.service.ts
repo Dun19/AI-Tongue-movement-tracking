@@ -26,10 +26,11 @@ export class TongueService implements ITongueService {
         }
       });
     });
+    fs.unlink(json.result_path, (err) => {
+      if (err) {
+        console.log("failed to delete empty file:", err);
+      }
+    });
     return { data, mimetype: json.mimetype };
-  }
-  getResult(input: string): object {
-    let json = { path: path.resolve("..", "ai-server", "result", input) };
-    return json;
   }
 }

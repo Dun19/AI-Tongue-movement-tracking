@@ -6,11 +6,6 @@ import os
 app = Sanic("Tongue-Detection-Server")
 
 
-@app.route("/", methods=['GET'])
-def index_page(request):
-    return text("Hello world1")
-
-
 @app.route("/detect", methods=['POST'])
 def detect(request):
 
@@ -20,9 +15,6 @@ def detect(request):
 
     filename_result = model.diagnose(filePath, r'..\web-server\result')
     mimetype = ''
-    if filename_result is None:
-        return json({'result_path': '', 'mimetype': mimetype})
-
     if model.is_video(filename_result):
         mimetype = 'video'
     if model.is_image(filename_result):

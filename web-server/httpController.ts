@@ -6,7 +6,6 @@ export class HttpController {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
         let json = await fn(req);
-        console.log(json);
         res.json(json);
       } catch (error) {
         next(error);

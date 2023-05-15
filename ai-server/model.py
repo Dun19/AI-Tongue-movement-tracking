@@ -209,11 +209,16 @@ def diagnose (path_in,path_out):
         img = cv2.resize(img,(width,height))
 
         pred_plotted=predict_AI(model,img,height,width)
-        if pred_plotted is None:
-            return
         next_file_name= (next_filename_of_type(path_out,'jpeg'))
-        print(next_file_name)
         path_out = os.path.join(path_out,str(next_file_name)+'.jpeg')
+        if pred_plotted is None:
+            font_scale = 2e-3 
+            thickness_scale = 1e-3 
+            font_scale=min(width, height) * font_scale
+            thickness=math.ceil(min(width, height) * thickness_scale)
+            cv2.putText(pred_plotted,f"No Detection.",(10,height-10),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(230,0,200),thickness,cv2.LINE_AA)
+            cv2.imwrite(path_out,img)
+            return path_out
         cv2.imwrite(path_out,pred_plotted)
                 
     elif is_video(path_in):

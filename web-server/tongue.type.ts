@@ -3,5 +3,4 @@ import { Request } from "express";
 
 export interface ITongueService {
   postTongueImage(input: string): Promise<object>;
-  getResult(input: string): object;
 }
