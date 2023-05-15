@@ -144,6 +144,7 @@ jobs:
         run: |
           ssh server "
             source ~/.nvm/nvm.sh && \
+            cd ${{env.SERVER_PROJECT_SERVER_DIR}} && \
             npx knex migrate:latest &&\
             pm2 reload ${{env.PM2_WEB_SERVER_NAME}} &&\
             echo done!

@@ -215,7 +215,7 @@ def diagnose (in_file_path,out_file_path):
             thickness_scale = 1e-3 
             font_scale=min(width, height) * font_scale
             thickness=math.ceil(min(width, height) * thickness_scale)
-            cv2.putText(pred_plotted,f"No Detection.",(10,height-10),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(230,0,200),thickness,cv2.LINE_AA)
+            cv2.putText(img,f"No Detection.",(10,height-10),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(230,0,200),thickness,cv2.LINE_AA)
             cv2.imwrite(out_file_path,img)
         else:
             cv2.imwrite(out_file_path,pred_plotted)          
