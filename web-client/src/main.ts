@@ -28,15 +28,17 @@ uploadForm.addEventListener("submit", async (event) => {
   let json = await res.json();
 
   if (json.mimetype == "image") {
-    resultImg.src = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
+    const url = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
       "base64"
     )}`;
     resultImg.height = 240;
     resultImg.height = 320;
+    console.log(1);
+    resultImg.innerHTML = `<img src=${url}  alt="" />`;
+    console.log(2);
   }
-  console.log(resultVideo);
   if (json.mimetype == "video") {
-    resultVideo.src = `data:video/mp4;base64,${Buffer.from(json.data).toString(
+    const url = `data:video/mp4;base64,${Buffer.from(json.data).toString(
       "base64"
     )}`;
 
@@ -46,10 +48,10 @@ uploadForm.addEventListener("submit", async (event) => {
     // let url = URL.createObjectURL(blob);
     // // console.log(videoSrc);
 
-    // resultVideo.innerHTML = `
-    // <video width="320" height="240" src=${url} controls>
-    // </video>
-    // `;
+    resultVideo.innerHTML = `
+    <video width="320" height="240" src=${url} controls>
+    </video>
+    `;
     // console.log(1);
     // resultVideo.load();
     // console.log(2);
@@ -87,11 +89,12 @@ uploadImageBtn.addEventListener("click", async () => {
   let json = await res.json();
 
   if (json.mimetype == "image") {
-    resultImg.src = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
+    const url = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
       "base64"
     )}`;
     resultImg.height = 240;
     resultImg.height = 320;
+    resultImg.innerHTML = `<img src=${url}  alt="" />`;
   }
   if (json.mimetype == "video") {
     resultVideo.src = `data:video/avi;base64,${Buffer.from(json.data).toString(

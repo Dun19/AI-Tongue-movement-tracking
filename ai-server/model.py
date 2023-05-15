@@ -107,7 +107,7 @@ def find_point_on_a_line_closet_to_contour_and_opposite_to_another_point(tongue_
     return (tongue_length,tongue_tip[0][0],tongue_tip[0][1])
 
 def predict_AI(model,src,height,width):
-    predict = model.predict(source=src, save=False, conf=0.70, save_txt=False, imgsz=(height,width))
+    predict = model.predict(source=src, save=False, conf=0.70, save_txt=False, imgsz=(height,width),classes=[0,2,3])
     pred_plotted = predict[0].plot(pil=True)
 
     #assign detected items to a label object, assign the one with highest confidence level if items is detected more than once
@@ -201,7 +201,7 @@ def next_filename_of_type(dir,str):
     return file_count
 
 def diagnose (path_in,path_out):
-    model = YOLO("yolomodel/bestforlip.pt")
+    model = YOLO("yolomodel/bestforlip2.pt")
     if is_image(path_in):
         img = cv2.imread(path_in)
         height = to_nearest_32x_int(img.shape[0])
@@ -224,7 +224,7 @@ def diagnose (path_in,path_out):
     elif is_video(path_in):
         frame_count = 0 
         frame_index = 0 
-        interval=20
+        interval=1
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         next_file_name= (next_filename_of_type(path_out,'mp4'))
         
