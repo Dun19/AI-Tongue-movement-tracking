@@ -1,6 +1,3 @@
-import IncomingForm from "formidable/Formidable";
-import { Request } from "express";
-
 export interface ITongueService {
-  postTongueImage(input: string): Promise<object>;
+  postTongueImage(in_file_path: string, out_file_path: string): Promise<void>;
 }

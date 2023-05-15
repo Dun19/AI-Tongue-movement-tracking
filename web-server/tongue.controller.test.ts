@@ -21,10 +21,7 @@ beforeEach(() => {
 
 describe("PostTongueImage", () => {
   it("", async () => {
-    postTongueImageMock.mockResolvedValue({ x: "mock" });
-
     let json = await tongueControllerMock.postTongueImage(req);
-    expect(json).toEqual({ x: "mock" });
     expect(postTongueImageMock).toBeCalled();
   });
 });

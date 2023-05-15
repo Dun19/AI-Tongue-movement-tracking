@@ -11,8 +11,7 @@ let canvas = document.querySelector("#canvas") as HTMLCanvasElement;
 let uploadImageBtn = document.querySelector(
   "#uploadImageBtn"
 ) as HTMLButtonElement;
-let resultImg = document.querySelector("#resultImg") as HTMLImageElement;
-let resultVideo = document.querySelector("#resultVideo") as HTMLVideoElement;
+let resultContainer = document.querySelector("#resultContainer") as HTMLElement;
 let uploadForm = document.querySelector("#uploadForm") as HTMLFormElement;
 
 uploadForm.addEventListener("submit", async (event) => {
@@ -21,43 +20,7 @@ uploadForm.addEventListener("submit", async (event) => {
 
   const formData = new FormData(form);
 
-  const res = await fetch("/diagnosis", {
-    method: "POST",
-    body: formData,
-  });
-  let json = await res.json();
-
-  if (json.mimetype == "image") {
-    const url = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
-      "base64"
-    )}`;
-    resultImg.height = 240;
-    resultImg.height = 320;
-    console.log(1);
-    resultImg.innerHTML = `<img src=${url}  alt="" />`;
-    console.log(2);
-  }
-  if (json.mimetype == "video") {
-    const url = `data:video/mp4;base64,${Buffer.from(json.data).toString(
-      "base64"
-    )}`;
-
-    // let uint8Array = new Uint8Array(json.data);
-    // let arrayBuffer = uint8Array.buffer;
-    // let blob = new Blob([arrayBuffer]);
-    // let url = URL.createObjectURL(blob);
-    // // console.log(videoSrc);
-
-    resultVideo.innerHTML = `
-    <video width="320" height="240" src=${url} controls>
-    </video>
-    `;
-    // console.log(1);
-    // resultVideo.load();
-    // console.log(2);
-    // // resultVideo.play();
-    // console.log(3);
-  }
+  await diagnosis(formData);
 });
 
 camera_button.addEventListener("click", async () => {
@@ -81,27 +44,44 @@ uploadImageBtn.addEventListener("click", async () => {
   let formData = new FormData();
   formData.set("file", file);
 
-  let res = await fetch("/diagnosis", {
+  await diagnosis(formData);
+});
+
+async function diagnosis(formData: FormData) {
+  const res = await fetch("/diagnosis", {
     method: "POST",
     body: formData,
   });
-
   let json = await res.json();
 
-  if (json.mimetype == "image") {
-    const url = `data:image/jpeg;base64,${Buffer.from(json.data).toString(
-      "base64"
-    )}`;
-    resultImg.height = 240;
-    resultImg.height = 320;
-    resultImg.innerHTML = `<img src=${url}  alt="" />`;
+  if (json.error) {
+    resultContainer.textContent = json.error;
+    return;
   }
-  if (json.mimetype == "video") {
-    resultVideo.src = `data:video/avi;base64,${Buffer.from(json.data).toString(
-      "base64"
-    )}`;
+
+  resultContainer.textContent = "";
+
+  let src = "result/" + json.filename;
+
+  if (src.endsWith(".mp4")) {
+    let video = document.createElement("video");
+    video.controls = true;
+    video.loop = true;
+    video.height = 240;
+    video.width = 320;
+    video.muted = true;
+    video.playsInline = true;
+    video.autoplay = true;
+    video.src = src;
+    resultContainer.appendChild(video);
+  } else {
+    let img = document.createElement("img");
+    img.src = src;
+    img.height = 240;
+    img.width = 320;
+    resultContainer.appendChild(img);
   }
-});
+}
 
 // async function main() {
 //   let canvas = document.querySelector("canvas#painter") as HTMLCanvasElement;
