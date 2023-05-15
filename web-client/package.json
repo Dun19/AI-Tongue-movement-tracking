@@ -11,9 +11,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "esbuild": "^0.17.18"
+    "@types/node": "^20.1.4",
+    "esbuild": "^0.17.18",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@beenotung/tslib": "^21.0.1"
+    "@beenotung/tslib": "^21.0.1",
+    "buffer": "^6.0.3"
   }
 }

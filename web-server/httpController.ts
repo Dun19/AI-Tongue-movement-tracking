@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-
+import path from "path";
 export class HttpController {
   router = Router();
   wrapMethod(fn: (req: Request) => object | Promise<object>) {

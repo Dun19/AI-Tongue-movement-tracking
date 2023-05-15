@@ -2,3 +2,8 @@ numpy==1.24.3
 pandas==2.0.1
 sanic==23.3.0
 opencv-python==4.7.0.72
+<<<<<<< HEAD
+Pillow==9.5.0
+=======
+ultralytics==8.0.94
+>>>>>>> ebe7239918b4183e2610a3b411d460f43b13bfe9

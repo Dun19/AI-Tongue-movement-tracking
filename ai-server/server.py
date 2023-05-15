@@ -1,23 +1,28 @@
 from sanic import Sanic
 from sanic.response import json, text
-import cv2
-
-
-
+import numpy as np
+import model
+import os
 app = Sanic("Tongue-Detection-Server")
 
-@app.route("/",methods=['GET'])
-def index_page(request):
-    return text("Hello world1")
 
-@app.route("/detect",methods=['POST'])
+@app.route("/detect", methods=['POST'])
 def detect(request):
-    print(request.json)
+
     filename = request.json['filename']
-    filePath = '../web-server/uploads/'+str(filename)
-    img = cv2.imread(filePath)
 
-    return json({'result':"todo"})
+    filePath = os.path.join('..', 'web-server', 'uploads', str(filename))
 
-app.run(port=8100,single_process=True)
+    filename_result = model.diagnose(filePath, r'..\web-server\result')
+    mimetype = ''
+    if model.is_video(filename_result):
+        mimetype = 'video'
+    if model.is_image(filename_result):
+        mimetype = 'image'
 
+    # filename_result = os.path.join('..', 'ai-server', str(filename_result))
+
+    return json({'result_path': filename_result, 'mimetype': mimetype})
+
+
+app.run(port=8100, single_process=True)

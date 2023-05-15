@@ -4,25 +4,72 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Tongue Monitor</title>
   </head>
   <body>
-    <button id="start-camera">Start Camera</button>
-    <div>
-      <video id="video" width="320" height="240" autoplay></video>
-    </div>
+    <main>
+      <h2>Welcome to Tongue Monitor</h2>
 
-    <button id="click-photo">Take Photo</button>
-    <div>
-      <canvas id="canvas" width="320" height="240"></canvas>
-    </div>
-    <div>
-      <button id="uploadImageBtn">Diagnosis</button>
-    </div>
-    <div>
-      <label for="">Result: </label>
-      <div id="result"></div>
-    </div>
+      <p>
+        This application aims to provide help to people who need tongue movement
+        tracking.
+      </p>
+      <h3>Instructions:</h3>
+      <p>1. Take a photo or upload your file.</p>
+      <p>2. Press diagnose or submit button to get your result.</p>
+      <p>
+        3. If tongue and tip are detected, you will get a result with tongue
+        angle, tongue length, and relative length
+      </p>
+      <p>
+        4. No detection will be marked on the photo in either tongue or lip is
+        not detected.
+      </p>
+
+      <h3>Remarks:</h3>
+      <p>
+        1. Positive angle represent an clockwise movement from 6 P.M.
+        <br />Negative angle represent an anti-clockwise movement from 6 P.M.
+      </p>
+      <p>2. Tongue length is in pixel unit.</p>
+      <p>
+        3. Ratio of Tongue length to Lip size tries to demonstrate the the
+        relative length of tongue out of mouth.
+      </p>
+      <h4>Method 1: Take a photo of your tongue by device camera.</h4>
+      <button id="start-camera">Start Camera</button>
+      <div>
+        <video id="video" width="320" height="240" autoplay></video>
+      </div>
+
+      <button id="click-photo">Take Photo</button>
+      <div>
+        <canvas id="canvas" width="320" height="240"></canvas>
+      </div>
+      <div>
+        <button id="uploadImageBtn">Diagnosis</button>
+      </div>
+
+      <h4>Method 2: Upload your photo or video and get results.</h4>
+      <p>
+        Note: This process may take a few minutes according to the file size.
+      </p>
+      <form
+        action="/diagnosis"
+        method="POST"
+        enctype="multipart/form-data"
+        id="uploadForm"
+      >
+        <input type="file" name="file" />
+        <input type="submit" value="submit" />
+      </form>
+      <div>
+        <label for="">Result: </label>
+        <div id="resultImg"></div>
+
+        <div id="resultVideo"></div>
+      </div>
+    </main>
 
     <script src="dist/bundle.js"></script>
   </body>
