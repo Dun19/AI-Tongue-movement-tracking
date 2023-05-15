@@ -33,7 +33,7 @@ app.use(express.static("../web-client/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// app.use(userRoute)
+// app.use(userRoute);1
 let tongueService = new TongueService(knex);
 let tongueController = new TongueController(tongueService);
 app.use(tongueController.router);
