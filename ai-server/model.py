@@ -201,7 +201,6 @@ def next_filename_of_type(dir,str):
     return file_count
 
 def diagnose (in_file_path,out_file_path):
-    print('diagnose', {'in_file_path':in_file_path,'out_file_path':out_file_path})
     model = YOLO("yolomodel/bestforlip2.pt")
     
     if is_image(in_file_path):

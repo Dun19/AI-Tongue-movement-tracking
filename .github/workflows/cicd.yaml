@@ -139,6 +139,10 @@ jobs:
             npm i --omit=dev && \
             cp .env dist/ &&\
             cd dist &&\
+          "
+      - name: update web-client and server1
+        run: |
+          ssh server "
             npx knex migrate:latest &&\
             pm2 reload ${{env.PM2_WEB_SERVER_NAME}} &&\
             echo done!
