@@ -8,21 +8,13 @@ app = Sanic("Tongue-Detection-Server")
 
 @app.route("/detect", methods=['POST'])
 def detect(request):
-
-    filename = request.json['filename']
-
-    filePath = os.path.join('..', 'web-server', 'uploads', str(filename))
-
-    filename_result = model.diagnose(filePath, r'..\web-server\result')
-    mimetype = ''
-    if model.is_video(filename_result):
-        mimetype = 'video'
-    if model.is_image(filename_result):
-        mimetype = 'image'
-
-    # filename_result = os.path.join('..', 'ai-server', str(filename_result)) 1
-
-    return json({'result_path': filename_result, 'mimetype': mimetype})
+    try:
+        in_file_path = request.json['in_file_path']
+        out_file_path = request.json['out_file_path']
+        model.diagnose(in_file_path, out_file_path)
+        return json({})
+    except Exception as err:
+        return json({'error': str(err)})
 
 
 app.run(port=8100, single_process=True)

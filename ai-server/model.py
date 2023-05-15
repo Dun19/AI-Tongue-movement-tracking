@@ -200,39 +200,36 @@ def next_filename_of_type(dir,str):
     else:file_count=1
     return file_count
 
-def diagnose (path_in,path_out):
+def diagnose (in_file_path,out_file_path):
+    print('diagnose', {'in_file_path':in_file_path,'out_file_path':out_file_path})
     model = YOLO("yolomodel/bestforlip2.pt")
-    if is_image(path_in):
-        img = cv2.imread(path_in)
+    
+    if is_image(in_file_path):
+        img = cv2.imread(in_file_path)
         height = to_nearest_32x_int(img.shape[0])
         width = to_nearest_32x_int(img.shape[1])
         img = cv2.resize(img,(width,height))
 
         pred_plotted=predict_AI(model,img,height,width)
-        next_file_name= (next_filename_of_type(path_out,'jpeg'))
-        path_out = os.path.join(path_out,str(next_file_name)+'.jpeg')
         if pred_plotted is None:
             font_scale = 2e-3 
             thickness_scale = 1e-3 
             font_scale=min(width, height) * font_scale
             thickness=math.ceil(min(width, height) * thickness_scale)
             cv2.putText(pred_plotted,f"No Detection.",(10,height-10),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(230,0,200),thickness,cv2.LINE_AA)
-            cv2.imwrite(path_out,img)
-            return path_out
-        cv2.imwrite(path_out,pred_plotted)
-                
-    elif is_video(path_in):
+            cv2.imwrite(out_file_path,img)
+        else:
+            cv2.imwrite(out_file_path,pred_plotted)          
+    elif is_video(in_file_path): # TODO make sure input and output are mp4
         frame_count = 0 
         frame_index = 0 
-        interval=1
-        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-        next_file_name= (next_filename_of_type(path_out,'mp4'))
-        
-        path_out = os.path.join(path_out,str(next_file_name)+'.mp4')
-        cap = cv2.VideoCapture(path_in)
+        interval=30
+
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        cap = cv2.VideoCapture(in_file_path)
         width=to_nearest_32x_int(cap.get(3))
         height=to_nearest_32x_int(cap.get(4))
-        out = cv2.VideoWriter(path_out, fourcc, 23, (width,height))
+        out = cv2.VideoWriter(out_file_path, fourcc, 23, (width,height))
 
         while cap.isOpened():
             success, frame = cap.read()      
@@ -251,8 +248,8 @@ def diagnose (path_in,path_out):
                 frame_count = frame_count +1
                 out.write(pred_plotted)
             frame_index+=1
-
-    return path_out
+    else:
+        raise Exception('invalid format, expect image or video')
 
 # diagnose(r'365.jpg',r'.\result')
 # diagnose(r'.\photos\raw_photos\練習四_舌頭向上_new.mp4',r'result')

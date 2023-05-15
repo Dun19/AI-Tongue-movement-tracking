@@ -1,26 +1,30 @@
 import { HttpController } from "./httpController";
 import { ITongueService } from "./tongue.type";
 import formidable from "formidable";
-import { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { HttpError } from "./error";
-import { join } from "path";
-import { unlink } from "fs";
+import path, { join } from "path";
+import { mkdirSync, unlink } from "fs";
+import { randomUUID } from "crypto";
+
+const uploadDir = "uploads";
+const resultDir = "result";
+
+mkdirSync(uploadDir, { recursive: true });
+mkdirSync(resultDir, { recursive: true });
 
 async function formParse(req: Request, res: Response, next: NextFunction) {
   try {
-    const uploadDir = "uploads";
     const form = formidable({
       uploadDir,
-      keepExtensions: true,
       maxFiles: 1,
       maxFileSize: 1024 ** 2 * 500, // the default limit is 200KB
-      filter: (part) => {
-        if (
-          part.mimetype?.startsWith("image/") ||
-          part.mimetype?.startsWith("video/")
-        ) {
-          return true;
-        } else return false;
+      filter: (part) =>
+        part.mimetype?.startsWith("image/") ||
+        part.mimetype?.startsWith("video/") ||
+        false,
+      filename(name, ext, part, form) {
+        return randomUUID() + "." + part.mimetype?.split("/").pop();
       },
     });
 
@@ -36,11 +40,10 @@ async function formParse(req: Request, res: Response, next: NextFunction) {
 
     let MaybeArray = files.file;
     let file = Array.isArray(MaybeArray) ? MaybeArray[0] : MaybeArray;
-    let filename = file?.newFilename;
 
-    if (!filename) throw new HttpError(400, "missing tongue image");
+    if (!file) throw new HttpError(400, "missing tongue image or video");
 
-    req.body.filename = filename;
+    req.body.file = file;
     next();
   } catch (error) {
     next(error);
@@ -55,16 +58,17 @@ export class TongueController extends HttpController {
       formParse,
       this.wrapMethod(this.postTongueImage)
     );
+    this.router.use("/result", express.static(resultDir));
   }
 
   postTongueImage = async (req: Request) => {
-    let result = await this.tongueService.postTongueImage(req.body.filename);
-    let file = join("uploads", req.body.filename);
-    unlink(file, (err) => {
-      if (err) {
-        // console.log("failed to delete empty file:", err);
-      }
-    });
-    return result;
+    let file = req.body.file as formidable.File;
+
+    let in_file_path = path.resolve(uploadDir, file.newFilename);
+    let out_filename = (file.newFilename + ".mp4").replace(".mp4.mp4", ".mp4");
+    let out_file_path = path.resolve(resultDir, out_filename);
+
+    await this.tongueService.postTongueImage(in_file_path, out_file_path);
+    return { filename: out_filename };
   };
 }
