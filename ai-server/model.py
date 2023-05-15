@@ -201,7 +201,7 @@ def next_filename_of_type(dir,str):
     return file_count
 
 def diagnose (in_file_path,out_file_path):
-    model = YOLO("yolomodel/bestforlip2.pt")
+    model = YOLO("Yolomodel/bestforlip2.pt")
     
     if is_image(in_file_path):
         img = cv2.imread(in_file_path)
