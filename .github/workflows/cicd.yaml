@@ -128,6 +128,7 @@ jobs:
           rsync -SavLP \
             server.py \
             model.py \
+            Yolomodel \
             requirements.txt \
             server:${{env.SERVER_PROJECT_AI_SERVER_DIR}}
       - name: update web-client and server
