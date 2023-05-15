@@ -14,6 +14,7 @@
             min-height: 10vh;
         }
         button{
+            margin-bottom: 1rem;
                 border: 0 solid #e2e8f0;;
                 background-color: transparent;
                 background-image: none;
@@ -107,7 +108,7 @@
                 
                 
             }
-            
+         
            
             
         }

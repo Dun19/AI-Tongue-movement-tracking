@@ -61,13 +61,20 @@ async function diagnosis(formData: FormData) {
   }
 
   let src = "result/" + json.filename;
-
+  console.log(screen.width);
   if (src.endsWith(".mp4")) {
     let video = document.createElement("video");
+
     video.controls = true;
     video.loop = true;
-    video.height = 240;
-    video.width = 320;
+    if (screen.width < 768) {
+      video.height = 240;
+      video.width = 320;
+    } else {
+      video.height = 480;
+      video.width = 640;
+    }
+
     video.muted = true;
     video.playsInline = true;
     video.autoplay = true;
@@ -76,8 +83,14 @@ async function diagnosis(formData: FormData) {
   } else {
     let img = document.createElement("img");
     img.src = src;
-    img.height = 240;
-    img.width = 320;
+    if (screen.width < 768) {
+      img.height = 240;
+      img.width = 320;
+    } else {
+      img.height = 480;
+      img.width = 640;
+    }
+
     resultContainer.appendChild(img);
   }
 }

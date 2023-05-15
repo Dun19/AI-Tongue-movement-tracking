@@ -790,18 +790,24 @@
       body: formData
     });
     let json = await res.json();
+    loadingIcon.innerHTML = "";
     if (json.error) {
       resultContainer.textContent = json.error;
       return;
     }
     let src = "result/" + json.filename;
-    loadingIcon.innerHTML = "";
+    console.log(screen.width);
     if (src.endsWith(".mp4")) {
       let video2 = document.createElement("video");
       video2.controls = true;
       video2.loop = true;
-      video2.height = 240;
-      video2.width = 320;
+      if (screen.width < 768) {
+        video2.height = 240;
+        video2.width = 320;
+      } else {
+        video2.height = 480;
+        video2.width = 640;
+      }
       video2.muted = true;
       video2.playsInline = true;
       video2.autoplay = true;
@@ -810,8 +816,13 @@
     } else {
       let img = document.createElement("img");
       img.src = src;
-      img.height = 240;
-      img.width = 320;
+      if (screen.width < 768) {
+        img.height = 240;
+        img.width = 320;
+      } else {
+        img.height = 480;
+        img.width = 640;
+      }
       resultContainer.appendChild(img);
     }
   }
