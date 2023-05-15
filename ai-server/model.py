@@ -182,9 +182,9 @@ def predict_AI(model,src,height,width):
     cv2.circle(pred_plotted, (int(tongue_tip_cx), int(tongue_tip_cy)), radius=0,color=(255, 0, 0), thickness=5)
     cv2.line(pred_plotted, (int(root_cx), int(root_cy)),(int(tongue_tip_cx), int(tongue_tip_cy)), (255, 0, 0), 2)
 
-    cv2.putText(pred_plotted,f"Angel :{int(round(theta_adjusted,1))} Deg.",(10,height-70),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(230,0,200),thickness,cv2.LINE_AA)
-    cv2.putText(pred_plotted,f"Tongue length (Blue Line) :{int(round(tongue_length,1))}",(10,height-40),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(230,0,200),thickness,cv2.LINE_AA) 
-    cv2.putText(pred_plotted,f"Ratio: Tongue length / Lip length:{round(relative_length,1)}",(10,height-10),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(230,0,200),thickness,cv2.LINE_AA) 
+    cv2.putText(pred_plotted,f"Angle :{int(round(theta_adjusted,1))} Deg.",(10,height-70),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(255,0,0),thickness,cv2.LINE_AA)
+    cv2.putText(pred_plotted,f"Tongue length (Blue Line) :{int(round(tongue_length,1))}",(10,height-40),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(255,0,0),thickness,cv2.LINE_AA) 
+    cv2.putText(pred_plotted,f"Ratio: Tongue length / Lip length:{round(relative_length,1)}",(10,height-10),cv2.FONT_HERSHEY_SIMPLEX,font_scale,(255,0,0),thickness,cv2.LINE_AA) 
     
     return pred_plotted
 
