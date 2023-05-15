@@ -222,7 +222,7 @@ def diagnose (in_file_path,out_file_path):
     elif is_video(in_file_path): # TODO make sure input and output are mp4
         frame_count = 0 
         frame_index = 0 
-        interval=30
+        interval=1
 
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         cap = cv2.VideoCapture(in_file_path)

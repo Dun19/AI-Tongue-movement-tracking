@@ -65,7 +65,11 @@ export class TongueController extends HttpController {
     let file = req.body.file as formidable.File;
 
     let in_file_path = path.resolve(uploadDir, file.newFilename);
-    let out_filename = (file.newFilename + ".mp4").replace(".mp4.mp4", ".mp4");
+    let out_filename = file.newFilename;
+    if (file.mimetype?.split("/")[0] == "video") {
+      out_filename = (file.newFilename + ".mp4").replace(".mp4.mp4", ".mp4");
+    }
+
     let out_file_path = path.resolve(resultDir, out_filename);
 
     await this.tongueService.postTongueImage(in_file_path, out_file_path);
