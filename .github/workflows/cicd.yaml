@@ -136,7 +136,7 @@ jobs:
             cd ${{env.SERVER_PROJECT_CLIENT_DIR}} && \
             npm i --omit=dev && \
             cd ${{env.SERVER_PROJECT_SERVER_DIR}} && \
-            npm i --omit=dev && \
+            npm i --omit=dev
           "
       - name: update web-client and server1
         run: |
