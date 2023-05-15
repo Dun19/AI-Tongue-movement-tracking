@@ -5,69 +5,136 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tongue Monitor</title>
+    <link href="style.css" rel="stylesheet"></link>
   </head>
   <body>
-    <main>
-      <h2>Welcome to Tongue Monitor</h2>
+    <div class="bg">
+      <div class="layout">
+        <div class="flex">
+    
 
-      <p>
-        This application aims to provide help to people who need tongue movement
-        tracking.
-      </p>
-      <h3>Instructions:</h3>
-      <p>1. Take a photo or upload your file.</p>
-      <p>2. Press diagnose or submit button to get your result.</p>
-      <p>
-        3. If tongue and tip are detected, you will get a result with tongue
-        angle, tongue length, and relative length
-      </p>
-      <p>
-        4. No detection will be marked on the photo in either tongue or lip is
-        not detected.
-      </p>
+          <div class="layout-right">
+            <div id="header">~ Welcome to Tongue Monitor ~</div>
+            <h1></h1>
+            
+            <div class="sectionouter">
+              <div class="projecttitle">Instructions:
+              </div>
+              <div class="bar"></div>
+              <div class="container text-center text-md-start">
+                <div class="row gap-2">
+                  <div class="col-md-5 col-12">
+                    <div class="mb-1">
+                      <ol class="instructions">
+                        <li> Take a photo or upload your file.</li>
+                        <li>Press diagnose or submit button to get your result.</li>
+                        <li> If tongue and tip are detected, you will get a result with tongue angle, tongue length, and relative length.</li>
+                        <li> No detection will be marked on the photo in either tongue or lip is not detected.</li>
+                      </ol>
+                    </div>
+                  </div>
+                  <div class="col-md-5 col-12"></div>
+                </div>
+              </div>
+            </div>
 
-      <h3>Remarks:</h3>
-      <p>
-        1. Positive angle represent an clockwise movement from 6 P.M.
-        <br />Negative angle represent an anti-clockwise movement from 6 P.M.
-      </p>
-      <p>2. Tongue length is in pixel unit.</p>
-      <p>
-        3. Ratio of Tongue length to Lip size tries to demonstrate the the
-        relative length of tongue out of mouth.
-      </p>
-      <h4>Method 1: Take a photo of your tongue by device camera.</h4>
-      <button id="start-camera">Start Camera</button>
-      <div>
-        <video id="video" width="320" height="240" autoplay></video>
+            <div class="sectionouter">
+              <div class="projecttitle">Remarks:
+              </div>
+              <div class="bar"></div>
+              <div class="container text-center text-md-start">
+                <div class="row gap-2">
+                  <div class="col-md-5 col-12">
+                    <div class="mb-1">
+                      <ol class="remarks">
+                        <li> Positive angle represent an clockwise movement from 6 P.M.</li>
+                        <li>  Negative angle represent an anti-clockwise movement from 6 P.M.</li>
+                        <li>Tongue length is in pixel unit.</li>
+                        <li> Ratio of Tongue length to Lip size tries to demonstrate the the relative length of tongue out of mouth.</li>
+ 
+                      </ol>
+                    </div>
+                  </div>
+                  <div class="col-md-5 col-12"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sectionouter">
+              <div class="projecttitle">Method 1: Take a photo of your tongue by device camera.
+              </div>
+              <div class="bar"></div>
+              <div class="container text-center text-md-start">
+                <div class="row gap-2">
+                  <div class="col-md-5 col-12">
+                    <div class="mb-1">
+                      <button id="start-camera">Start Camera</button>
+                      <div>
+                        <video id="video" width="320" height="240" autoplay></video>
+                      </div>
+                
+                      <button id="click-photo">Take Photo</button>
+                      <div>
+                        <canvas id="canvas" width="320" height="240"></canvas>
+                      </div>
+                      <div>
+                        <button id="uploadImageBtn">Diagnose</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-5 col-12"></div>
+                </div>
+              </div>
+            </div>
+            <div class="sectionouter">
+              <div class="projecttitle">Method 2: Upload your photo or video and get results.
+              </div>
+              <div class="bar"></div>
+              <div class="container text-center text-md-start">
+                <div class="row gap-2">
+                  <div class="col-md-5 col-12">
+                    <div class="mb-1">
+                      <p>
+                        Note: This process may take a few minutes according to the file size.
+                      </p>
+                      <form
+                        action="/diagnosis"
+                        method="POST"
+                        enctype="multipart/form-data"
+                        id="uploadForm"
+                      >
+                        <input type="file" name="file" />
+                        <input type="submit" value="submit" />
+                      </form>
+                    </div>
+                  </div>
+                  <div class="col-md-5 col-12"></div>
+                </div>
+              </div>
+            </div>
+            <div class="sectionouter">
+              <div class="projecttitle" >Results
+              </div>
+              <div class="bar"></div>
+              <div class="container text-center text-md-start">
+                <div class="row gap-2">
+                  <div class="col-md-5 col-12">
+                    <div class="mb-1">
+                      <div id="resultContainer"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-5 col-12"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <button id="click-photo">Take Photo</button>
-      <div>
-        <canvas id="canvas" width="320" height="240"></canvas>
-      </div>
-      <div>
-        <button id="uploadImageBtn">Diagnosis</button>
-      </div>
+   
+   
+    </div>
 
-      <h4>Method 2: Upload your photo or video and get results.</h4>
-      <p>
-        Note: This process may take a few minutes according to the file size.
-      </p>
-      <form
-        action="/diagnosis"
-        method="POST"
-        enctype="multipart/form-data"
-        id="uploadForm"
-      >
-        <input type="file" name="file" />
-        <input type="submit" value="submit" />
-      </form>
-      <div>
-        <label>Result: </label>
-        <div id="resultContainer"></div>
-      </div>
-    </main>
 
     <script src="dist/bundle.js"></script>
   </body>
