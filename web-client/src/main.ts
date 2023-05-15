@@ -11,9 +11,10 @@ let uploadImageBtn = document.querySelector(
 ) as HTMLButtonElement;
 let resultContainer = document.querySelector("#resultContainer") as HTMLElement;
 let uploadForm = document.querySelector("#uploadForm") as HTMLFormElement;
-
+let loadingIcon = document.querySelector("#loading") as HTMLSpanElement;
 uploadForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
   let form = uploadForm;
 
   const formData = new FormData(form);
@@ -46,18 +47,18 @@ uploadImageBtn.addEventListener("click", async () => {
 });
 
 async function diagnosis(formData: FormData) {
+  resultContainer.textContent = "";
+  loadingIcon.innerHTML = '<i class="fas fa-sync fa-spin"></i>';
   const res = await fetch("/diagnosis", {
     method: "POST",
     body: formData,
   });
   let json = await res.json();
-
+  loadingIcon.innerHTML = "";
   if (json.error) {
     resultContainer.textContent = json.error;
     return;
   }
-
-  resultContainer.textContent = "";
 
   let src = "result/" + json.filename;
 

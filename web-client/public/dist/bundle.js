@@ -754,6 +754,7 @@
   );
   var resultContainer = document.querySelector("#resultContainer");
   var uploadForm = document.querySelector("#uploadForm");
+  var loadingIcon = document.querySelector("#loading");
   uploadForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     let form = uploadForm;
@@ -782,6 +783,8 @@
     await diagnosis(formData);
   });
   async function diagnosis(formData) {
+    resultContainer.textContent = "";
+    loadingIcon.innerHTML = '<i class="fas fa-sync fa-spin"></i>';
     const res = await fetch("/diagnosis", {
       method: "POST",
       body: formData
@@ -791,8 +794,8 @@
       resultContainer.textContent = json.error;
       return;
     }
-    resultContainer.textContent = "";
     let src = "result/" + json.filename;
+    loadingIcon.innerHTML = "";
     if (src.endsWith(".mp4")) {
       let video2 = document.createElement("video");
       video2.controls = true;
